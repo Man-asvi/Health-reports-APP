@@ -1,0 +1,20 @@
+{
+  "name": "patient-health-management-app",
+  "version": "1.0.0",
+  "description": "AI-powered patient health management MVP built from the project brief",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "mobile:init": "npx cap init CareCompassAI com.carecompass.app --web-dir=public",
+    "mobile:sync": "npx cap sync",
+    "mobile:android": "npx cap open android",
+    "mobile:ios": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/ios": "^7.4.3"
+  },
+  "license": "MIT"
+}

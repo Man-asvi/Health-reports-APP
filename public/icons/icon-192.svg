@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title desc">
+  <title id="title">CareCompass AI icon</title>
+  <desc id="desc">Health app icon with shield and medical cross</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14532d"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="44" fill="url(#bg)"/>
+  <path d="M96 38l46 17v38c0 32-21 53-46 61-25-8-46-29-46-61V55l46-17z" fill="#ffffff" fill-opacity="0.96"/>
+  <path d="M88 69h16v16h16v16h-16v16H88v-16H72V85h16V69z" fill="#14532d"/>
+</svg>

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>CareCompass AI</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell" id="appShell" hidden>
+      <aside class="sidebar">
+        <div>
+          <div class="brand">CareCompass AI</div>
+          <nav class="tab-nav" id="desktopTabNav">
+            <button type="button" class="tab-link is-active" data-tab-target="dashboard">Dashboard</button>
+            <button type="button" class="tab-link" data-tab-target="scanner">Document Scanner</button>
+            <button type="button" class="tab-link" data-tab-target="monitoring">Health Monitoring</button>
+            <button type="button" class="tab-link" data-tab-target="timeline">Medical Timeline</button>
+            <button type="button" class="tab-link" data-tab-target="families">Family Accounts</button>
+          </nav>
+        </div>
+        <div class="sidebar-card">
+          <strong>Privacy First</strong>
+          <p>All records stay under user-controlled access with audit-friendly visibility.</p>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="topbar">
+          <div>
+            <h1>Patient Health Companion</h1>
+            <p>Organize records, monitor trends, and surface the right reminders.</p>
+          </div>
+          <div class="user-bar">
+            <div id="activeUserLabel" class="user-badge">Not signed in</div>
+            <div id="viewingAccountLabel" class="user-badge" hidden></div>
+            <button type="button" id="logoutButton" class="secondary">Logout</button>
+          </div>
+          <div class="search-wrap">
+            <label class="sr-only" for="searchInput">Search records</label>
+            <input id="searchInput" type="text" placeholder="Search reports, doctors, diseases..." />
+            <button id="searchButton">Search</button>
+          </div>
+        </section>
+
+        <section class="top-actions" aria-label="Quick actions">
+          <button type="button" class="secondary" data-quick-tab="scanner">Scan report</button>
+          <button type="button" class="secondary" data-quick-tab="monitoring">Log reading</button>
+          <button type="button" class="secondary" data-quick-tab="families">Family accounts</button>
+        </section>
+
+        <section id="appStatus" class="app-status" hidden></section>
+
+        <section id="viewModeNotice" class="view-mode-notice" hidden>
+          <div>
+            You are viewing a linked family account in read-only mode.
+          </div>
+          <button type="button" id="switchToSelfButton">Switch to my account</button>
+        </section>
+
+        <section class="mobile-tabs" id="mobileTabNav">
+          <button type="button" class="tab-link is-active" data-tab-target="dashboard" aria-label="Home dashboard">
+            <span class="tab-main">Home</span>
+            <span class="tab-sub">Overview</span>
+          </button>
+          <button type="button" class="tab-link" data-tab-target="scanner" aria-label="Scan medical reports">
+            <span class="tab-main">Scan</span>
+            <span class="tab-sub">Reports</span>
+          </button>
+          <button type="button" class="tab-link" data-tab-target="monitoring" aria-label="Track health readings">
+            <span class="tab-main">Track</span>
+            <span class="tab-sub">Vitals</span>
+          </button>
+          <button type="button" class="tab-link" data-tab-target="timeline" aria-label="Medical history timeline">
+            <span class="tab-main">History</span>
+            <span class="tab-sub">Timeline</span>
+          </button>
+          <button type="button" class="tab-link" data-tab-target="families" aria-label="Family profiles and accounts">
+            <span class="tab-main">Family</span>
+            <span class="tab-sub">Profiles</span>
+          </button>
+        </section>
+
+        <section class="tab-panel is-active" data-tab-panel="dashboard">
+          <section class="grid two-column">
+            <article class="card summary-card">
+              <h2>Today's Priority</h2>
+              <ul id="todayList"></ul>
+            </article>
+            <article class="card summary-card">
+              <h2>AI Health Summary</h2>
+              <p id="aiSummary"></p>
+              <div id="riskBadge" class="pill"></div>
+              <p id="nextAction"></p>
+            </article>
+          </section>
+
+          <section class="grid three-column margin-top">
+            <article class="card">
+              <h2>Upcoming Visits</h2>
+              <ul id="visitList"></ul>
+            </article>
+            <article class="card">
+              <h2>Pending Tests</h2>
+              <ul id="testsList"></ul>
+            </article>
+            <article class="card">
+              <h2>Recent Uploads</h2>
+              <ul id="uploadList"></ul>
+            </article>
+          </section>
+
+          <section class="card margin-top">
+            <h2>AI Health Assistant</h2>
+            <div class="chat-row">
+              <label class="sr-only" for="chatInput">Ask the assistant</label>
+              <input id="chatInput" type="text" placeholder="Ask about medicines, visits, or reports" />
+              <button id="chatButton">Ask</button>
+            </div>
+            <div id="chatAnswer" class="chat-answer">Ask a question about your health data.</div>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="scanner">
+          <section id="scanner" class="grid two-column">
+            <article class="card">
+              <h2>AI Document Scanner</h2>
+              <form id="recordForm">
+                <input type="hidden" name="recordId" />
+                <div id="recordEditBanner" class="edit-banner" hidden>
+                  Editing saved report
+                </div>
+                <div class="form-grid">
+                  <label>Report type<input name="type" value="Prescription" /></label>
+                  <label>Hospital<input name="hospital" placeholder="Hospital name from report" /></label>
+                  <label>Patient name<input name="patientName" placeholder="Patient name from report" /></label>
+                  <label>Doctor<input name="doctor" placeholder="Doctor name from report" /></label>
+                  <label>Specialization<input name="specialization" placeholder="Specialization" /></label>
+                  <label>Visit date<input name="visitDate" type="date" /></label>
+                  <label>Follow-up date<input name="followUpDate" type="date" /></label>
+                  <label>Diagnosis<input name="diagnosis" placeholder="Diagnosis" /></label>
+                  <label>Disease<input name="disease" placeholder="Disease" /></label>
+                  <label>Medicines<input name="medicines" placeholder="Medicines" /></label>
+                  <label>Tests<input name="tests" placeholder="Tests" /></label>
+                  <label class="full-width">Summary<textarea name="summary" placeholder="AI summary"></textarea></label>
+                  <label class="full-width">Document OCR text<textarea id="documentText" placeholder="Paste OCR text or extracted note here"></textarea></label>
+                </div>
+                <div class="scanner-photo-row">
+                  <label class="sr-only" for="scanPhotoInput">Choose report photo</label>
+                  <input id="scanPhotoInput" type="file" accept="image/*" capture="environment" />
+                  <button type="button" id="scanPhotoButton" class="secondary">Use camera photo</button>
+                </div>
+                <img id="photoPreview" class="photo-preview" alt="Captured report preview" hidden />
+                <div class="action-row">
+                  <button type="submit" id="recordSubmitButton">Save scanned record</button>
+                  <button type="button" id="cancelEditButton" class="secondary" hidden>Cancel edit</button>
+                  <button type="button" id="scanButton" class="secondary">Run AI extraction</button>
+                </div>
+              </form>
+            </article>
+
+            <article class="card">
+              <h2>Search Results</h2>
+              <div id="resultsContainer" class="results-list"></div>
+              <div class="extraction-panel">
+                <div class="extraction-panel-header">
+                  <h3>Normalized Extraction Review</h3>
+                  <span id="extractionStatus" class="review-pill">Waiting for scan</span>
+                </div>
+                <p id="extractionSummary" class="extraction-summary">Run AI extraction to review cleaned medicines, diagnoses, and tests.</p>
+                <div class="review-grid">
+                  <div class="review-card">
+                    <strong>Diagnosis</strong>
+                    <div id="reviewDiagnosis" class="review-value">Not available yet</div>
+                  </div>
+                  <div class="review-card">
+                    <strong>Disease</strong>
+                    <div id="reviewDisease" class="review-value">Not available yet</div>
+                  </div>
+                  <div class="review-card full-width">
+                    <strong>Medicines</strong>
+                    <div id="reviewMedicines" class="review-chips"></div>
+                  </div>
+                  <div class="review-card full-width">
+                    <strong>Tests</strong>
+                    <div id="reviewTests" class="review-chips"></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="monitoring">
+          <section id="monitoring" class="grid two-column">
+            <article class="card">
+              <h2>Health Monitoring</h2>
+              <form id="metricForm" class="inline-form">
+                <label class="sr-only" for="metricName">Metric name</label>
+                <input id="metricName" name="metric" placeholder="Metric" value="Blood Pressure" />
+                <label class="sr-only" for="metricValue">Metric value</label>
+                <input id="metricValue" name="value" placeholder="Value" value="122/80" />
+                <label class="sr-only" for="metricDate">Metric date</label>
+                <input id="metricDate" name="date" type="date" />
+                <label class="sr-only" for="metricTime">Metric time</label>
+                <input id="metricTime" name="time" placeholder="Morning" value="Morning" />
+                <button type="submit">Log reading</button>
+              </form>
+              <div id="metricsList" class="metrics-list"></div>
+            </article>
+
+            <article class="card">
+              <h2>Recording Plans</h2>
+              <form id="planForm" class="inline-form">
+                <label class="sr-only" for="planName">Plan name</label>
+                <input id="planName" name="name" placeholder="Plan name (e.g. Blood sugar)" required />
+                <label class="sr-only" for="planSchedule">Schedule</label>
+                <input id="planSchedule" name="schedule" placeholder="Schedule (e.g. Daily)" required />
+                <label class="sr-only" for="planReminder">Reminder time</label>
+                <input id="planReminder" name="reminder" placeholder="Reminder (e.g. 08:00 AM)" required />
+                <button type="submit">Add plan</button>
+              </form>
+              <div id="planList" class="plan-list"></div>
+            </article>
+          </section>
+
+          <section class="grid two-column margin-top">
+            <article class="card">
+              <h2>Medication Reminders</h2>
+              <form id="medicineReminderForm" class="inline-form">
+                <label class="sr-only" for="medicineName">Medicine</label>
+                <input id="medicineName" name="medicine" placeholder="Medicine name" required />
+                <label class="sr-only" for="medicineTime">Time</label>
+                <input id="medicineTime" name="time" placeholder="Time (e.g. Night)" required />
+                <label class="sr-only" for="medicineNote">Note</label>
+                <input id="medicineNote" name="note" placeholder="Note (e.g. After dinner)" />
+                <button type="submit">Add reminder</button>
+              </form>
+              <div id="medicineList" class="plan-list"></div>
+            </article>
+            <article class="card">
+              <h2>Doctor Visit Reminders</h2>
+              <form id="visitReminderForm" class="inline-form">
+                <label class="sr-only" for="visitTitle">Visit title</label>
+                <input id="visitTitle" name="title" placeholder="Visit title" required />
+                <label class="sr-only" for="visitDue">Due date</label>
+                <input id="visitDue" name="due" type="date" required />
+                <label class="sr-only" for="visitType">Visit type</label>
+                <input id="visitType" name="type" placeholder="Type (e.g. Diabetes review)" />
+                <button type="submit">Add visit</button>
+              </form>
+              <div id="visitReminderList" class="plan-list"></div>
+            </article>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="timeline">
+          <section id="timeline" class="card">
+            <h2>Medical Timeline</h2>
+            <div id="timelineList" class="timeline"></div>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="families">
+          <section id="families" class="grid two-column">
+            <article class="card">
+              <h2>Family Accounts</h2>
+              <form id="familyAccountLinkForm" class="inline-form">
+                <label class="sr-only" for="familyAccountUsername">Family account username</label>
+                <input id="familyAccountUsername" name="username" placeholder="Family account username" required />
+                <label class="sr-only" for="familyAccountRelation">Relation</label>
+                <input id="familyAccountRelation" name="relation" placeholder="Relation (e.g. Sister)" />
+                <button type="submit">Link account</button>
+              </form>
+              <form id="familyForm" class="inline-form">
+                <label class="sr-only" for="familyName">Full name</label>
+                <input id="familyName" name="name" placeholder="Full name" required />
+                <label class="sr-only" for="familyRelation">Relation</label>
+                <input id="familyRelation" name="relation" placeholder="Relation (e.g. Mother)" required />
+                <label class="sr-only" for="familyBloodGroup">Blood group</label>
+                <input id="familyBloodGroup" name="emergency" placeholder="Blood group (e.g. O+)" />
+                <label class="sr-only" for="familyAllergies">Allergies</label>
+                <input id="familyAllergies" name="allergies" placeholder="Allergies (comma separated)" />
+                <label class="sr-only" for="familyMedicines">Current medicines</label>
+                <input id="familyMedicines" name="medicines" placeholder="Medicines (comma separated)" />
+                <button type="submit">Add family member</button>
+              </form>
+              <div id="familyList" class="family-list"></div>
+            </article>
+            <article class="card emergency-card">
+              <h2>Emergency Card</h2>
+              <div id="emergencyCard"></div>
+            </article>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F" crossorigin="anonymous"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

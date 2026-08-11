@@ -1,0 +1,9 @@
+{
+  "appId": "com.carecompass.app",
+  "appName": "CareCompassAI",
+  "webDir": "public",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "http"
+  }
+}

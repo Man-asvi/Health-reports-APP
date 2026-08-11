@@ -1,0 +1,272 @@
+{
+  "users": {
+    "mankal": {
+      "username": "mankal",
+      "displayName": "Mankal",
+      "passwordHash": "1f0d37bc51f2a6c2c487a10da4f35f663d6e8bab52771ba8552294b0de9f931a",
+      "data": {
+        "patient": {
+          "id": "patient-1786038645501",
+          "name": "Mankal",
+          "age": 31,
+          "emergencyContact": "Mankal",
+          "bloodGroup": "A+",
+          "allergies": [
+            "Penicillin"
+          ],
+          "chronicDiseases": [
+            "Diabetes",
+            "Hypertension"
+          ]
+        },
+        "records": [
+          {
+            "id": 1786444689695,
+            "hospital": "",
+            "patientName": "",
+            "doctor": "",
+            "specialization": "",
+            "diagnosis": "",
+            "disease": "",
+            "medicines": [],
+            "tests": [],
+            "visitDate": "_J£L~ ol)",
+            "followUpDate": "2026-08-25",
+            "summary": "AI extraction completed from uploaded report photo or text."
+          },
+          {
+            "id": 1786040361689,
+            "type": "Prescription",
+            "hospital": "Self Uploaded",
+            "patientName": "Jane X",
+            "doctor": "Unknown",
+            "specialization": "General Medicine",
+            "diagnosis": "Fever, unspecified (R50.9)",
+            "medicines": [
+              "acetaminophen 650 mg"
+            ],
+            "tests": [],
+            "visitDate": "2026-08-06",
+            "followUpDate": "",
+            "disease": "Fever, unspecified (R50.9)",
+            "summary": "AI extraction completed from uploaded report photo or text."
+          },
+          {
+            "id": 1786040330311,
+            "type": "Prescription",
+            "hospital": "Self Uploaded",
+            "patientName": "Jane X",
+            "doctor": "Unknown",
+            "specialization": "General Medicine",
+            "diagnosis": "Fever, unspecified (R50.9)",
+            "medicines": [
+              "acetaminophen 650 mg"
+            ],
+            "tests": [],
+            "visitDate": "07/10/2018",
+            "followUpDate": "2026-08-20",
+            "disease": "Fever, unspecified (R50.9)",
+            "summary": "AI extraction completed from uploaded report photo or text."
+          }
+        ],
+        "metrics": [],
+        "plans": [],
+        "medicationReminders": [],
+        "visitReminders": [],
+        "linkedAccounts": [],
+        "profiles": [
+          {
+            "name": "Mankal",
+            "relation": "Self",
+            "emergency": "A+",
+            "allergies": [
+              "Penicillin"
+            ],
+            "medicines": []
+          }
+        ]
+      }
+    },
+    "qaempty": {
+      "username": "qaempty",
+      "displayName": "QA Empty",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "data": {
+        "patient": {
+          "id": "patient-1786039245377",
+          "name": "QA Empty",
+          "age": 31,
+          "emergencyContact": "QA Empty",
+          "bloodGroup": "A+",
+          "allergies": [
+            "Penicillin"
+          ],
+          "chronicDiseases": [
+            "Diabetes",
+            "Hypertension"
+          ]
+        },
+        "records": [
+          {
+            "id": 1786040244319,
+            "hospital": "",
+            "patientName": "",
+            "doctor": "",
+            "specialization": "",
+            "diagnosis": "Fever, unspecified (R50.9) / Acute upper respiratory infection, unspecified (J06.9)",
+            "disease": "Fever, unspecified (R50.9)",
+            "medicines": [
+              "acetaminophen 650 mg"
+            ],
+            "tests": [],
+            "visitDate": "2026-08-06",
+            "followUpDate": "2026-08-20",
+            "summary": "Partial extraction completed from difficult handwriting. Please verify details before saving."
+          },
+          {
+            "id": 1786040237349,
+            "hospital": "",
+            "patientName": "",
+            "doctor": "",
+            "specialization": "",
+            "diagnosis": "Fever, unspecified (R50.9) / Acute upper respiratory infection, unspecified (J06.9)",
+            "disease": "Fever, unspecified (R50.9)",
+            "medicines": [
+              "acetaminophen 650 mg"
+            ],
+            "tests": [],
+            "visitDate": "2026-08-06",
+            "followUpDate": "2026-08-20",
+            "summary": "Partial extraction completed from difficult handwriting. Please verify details before saving."
+          },
+          {
+            "id": 1786040015807,
+            "hospital": "",
+            "patientName": "",
+            "doctor": "",
+            "specialization": "",
+            "diagnosis": "Fever, unspecified (R50.9) / Acute upper respiratory infection, unspecified (J06.9)",
+            "disease": "Fever, unspecified (R50.9)",
+            "medicines": [
+              "acetaminophen 650 mg"
+            ],
+            "tests": [],
+            "visitDate": "2026-08-06",
+            "followUpDate": "2026-08-20",
+            "summary": "Partial extraction completed from difficult handwriting. Please verify details before saving."
+          },
+          {
+            "id": 1786039843827,
+            "type": "Prescription",
+            "hospital": "Self Uploaded",
+            "patientName": "Jane X",
+            "doctor": "Unknown",
+            "specialization": "General Medicine",
+            "diagnosis": "Fever / Infection",
+            "medicines": [
+              "Acetaminophen 650 mg tabs",
+              "Sig: 1 tab PO q6h"
+            ],
+            "tests": [],
+            "visitDate": "2026-08-06",
+            "followUpDate": "",
+            "disease": "Fever / Infection",
+            "summary": "AI extraction completed from uploaded report photo or text."
+          }
+        ],
+        "metrics": [],
+        "plans": [],
+        "medicationReminders": [],
+        "visitReminders": [],
+        "linkedAccounts": [],
+        "profiles": [
+          {
+            "name": "QA Empty",
+            "relation": "Self",
+            "emergency": "A+",
+            "allergies": [
+              "Penicillin"
+            ],
+            "medicines": []
+          }
+        ]
+      }
+    },
+    "apitestuser": {
+      "username": "apitestuser",
+      "displayName": "API Test",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "data": {
+        "patient": {
+          "id": "patient-1786268638667",
+          "name": "API Test",
+          "age": 31,
+          "emergencyContact": "API Test",
+          "bloodGroup": "A+",
+          "allergies": [
+            "Penicillin"
+          ],
+          "chronicDiseases": [
+            "Diabetes",
+            "Hypertension"
+          ]
+        },
+        "records": [],
+        "metrics": [],
+        "plans": [],
+        "medicationReminders": [],
+        "visitReminders": [],
+        "linkedAccounts": [],
+        "profiles": [
+          {
+            "name": "API Test",
+            "relation": "Self",
+            "emergency": "A+",
+            "allergies": [
+              "Penicillin"
+            ],
+            "medicines": []
+          }
+        ]
+      }
+    },
+    "mobileflow": {
+      "username": "mobileflow",
+      "displayName": "Mobile Flow",
+      "passwordHash": "bd94dcda26fccb4e68d6a31f9b5aac0b571ae266d822620e901ef7ebe3a11d4f",
+      "data": {
+        "patient": {
+          "id": "patient-1786268878447",
+          "name": "Mobile Flow",
+          "age": 31,
+          "emergencyContact": "Mobile Flow",
+          "bloodGroup": "A+",
+          "allergies": [
+            "Penicillin"
+          ],
+          "chronicDiseases": [
+            "Diabetes",
+            "Hypertension"
+          ]
+        },
+        "records": [],
+        "metrics": [],
+        "plans": [],
+        "medicationReminders": [],
+        "visitReminders": [],
+        "linkedAccounts": [],
+        "profiles": [
+          {
+            "name": "Mobile Flow",
+            "relation": "Self",
+            "emergency": "A+",
+            "allergies": [
+              "Penicillin"
+            ],
+            "medicines": []
+          }
+        ]
+      }
+    }
+  }
+}
