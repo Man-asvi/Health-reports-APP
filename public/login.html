@@ -10,6 +10,12 @@
     <title>Login | CareCompass AI</title>
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/styles.css" />
+    <script>
+      // Deployed backend the native (Capacitor) app should talk to.
+      // The web build ignores this (relative URLs already work on the
+      // Render origin); only the packaged Android/iOS app uses it.
+      window.CARECOMPASS_API_BASE = 'https://health-reports-app.onrender.com';
+    </script>
   </head>
   <body>
     <section class="auth-screen">
