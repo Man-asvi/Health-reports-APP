@@ -140,7 +140,10 @@ function updateAuthMode() {
   const displayNameField = document.getElementById('displayNameField');
 
   if (title) title.textContent = authState.isRegisterMode ? 'Create account' : 'Login';
-  if (submit) submit.textContent = authState.isRegisterMode ? 'Create account' : 'Login';
+  if (submit) {
+    const icon = authState.isRegisterMode ? 'icon-plus' : 'icon-arrow-right-circle';
+    submit.innerHTML = `<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#${icon}"></use></svg>${authState.isRegisterMode ? 'Create account' : 'Login'}`;
+  }
   if (toggle) toggle.textContent = authState.isRegisterMode ? 'Use existing account instead' : 'Create account instead';
   if (displayNameField) displayNameField.hidden = !authState.isRegisterMode;
 }

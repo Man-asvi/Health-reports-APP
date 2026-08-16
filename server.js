@@ -496,7 +496,7 @@ function getDashboardPayload(userData, options = {}) {
       medicinesToday: medicationReminders.slice(0, 3).map((item) => item.medicine),
       visits: visitReminders.slice(0, 3).map((item) => `${item.due} ${item.title}`),
       pendingTests: records.flatMap((record) => record.tests || []).slice(0, 3),
-      recentUploads: records.slice(0, 3).map((record) => `${record.type} - ${record.hospital}`),
+      recentUploads: records.slice(0, 3).map((record) => `${record.type || 'Report'} - ${record.hospital}`),
       aiInsight: insight.monthlyNarrative,
       riskLevel: insight.riskLevel,
       nextBestAction: insight.nextBestAction

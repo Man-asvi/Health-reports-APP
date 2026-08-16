@@ -220,7 +220,20 @@ function updateActiveUserLabel() {
   if (!label) {
     return;
   }
-  label.textContent = state.currentUser ? `${state.currentUser.displayName || state.currentUser.username}` : 'Not signed in';
+  const name = state.currentUser ? `${state.currentUser.displayName || state.currentUser.username}` : 'Not signed in';
+  label.textContent = name;
+  label.setAttribute('data-initial', name ? name.trim().charAt(0).toUpperCase() : '?');
+}
+
+function setChatAnswer(message) {
+  const el = document.getElementById('chatAnswer');
+  if (!el) {
+    return;
+  }
+  if (!el.querySelector('span')) {
+    el.innerHTML = '<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-message"></use></svg><span></span>';
+  }
+  el.querySelector('span').textContent = message;
 }
 
 function updateViewingAccountLabel() {
@@ -251,26 +264,23 @@ function setStatus(message, type = 'info') {
 
   if (!message) {
     status.hidden = true;
-    status.textContent = '';
-    status.style.borderColor = '#bfdbfe';
-    status.style.background = '#eff6ff';
-    status.style.color = '#1e3a8a';
+    status.className = 'app-status';
+    status.innerHTML = '';
     return;
   }
 
-  const styles = {
-    info: { border: '#bfdbfe', bg: '#eff6ff', color: '#1e3a8a' },
-    success: { border: '#86efac', bg: '#f0fdf4', color: '#166534' },
-    warning: { border: '#facc15', bg: '#fef9c3', color: '#713f12' },
-    error: { border: '#fca5a5', bg: '#fef2f2', color: '#991b1b' }
+  const icons = {
+    info: 'icon-info-circle',
+    success: 'icon-check-circle',
+    warning: 'icon-alert-triangle',
+    error: 'icon-x-circle'
   };
+  const icon = icons[type] || icons.info;
 
-  const mode = styles[type] || styles.info;
   status.hidden = false;
-  status.textContent = message;
-  status.style.borderColor = mode.border;
-  status.style.background = mode.bg;
-  status.style.color = mode.color;
+  status.className = `app-status status-${icons[type] ? type : 'info'}`;
+  status.innerHTML = `<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#${icon}"></use></svg><span></span>`;
+  status.querySelector('span').textContent = message;
 }
 
 function setReadOnlyMode(isReadOnly) {
@@ -429,7 +439,10 @@ function renderDashboard(data) {
     .map((item) => `<li>${item}</li>`)
     .join('');
   document.getElementById('aiSummary').textContent = data.summary.aiInsight;
-  document.getElementById('riskBadge').textContent = `Risk level: ${data.summary.riskLevel || 'Stable'}`;
+  const riskLevel = data.summary.riskLevel || 'Stable';
+  const riskBadge = document.getElementById('riskBadge');
+  riskBadge.textContent = `Risk level: ${riskLevel}`;
+  riskBadge.className = `pill risk-${riskLevel.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
   document.getElementById('nextAction').textContent = data.summary.nextBestAction || '';
 
   document.getElementById('planList').innerHTML = (data.plans || []).length ? data.plans.map((plan) => `
@@ -438,27 +451,27 @@ function renderDashboard(data) {
       ${plan.schedule}<br />
       Reminder: ${plan.reminder}
     </div>
-  `).join('') : '<div class="result-item">No recording plans yet. Add one above.</div>';
+  `).join('') : '<div class="result-item is-empty">No recording plans yet. Add one above.</div>';
 
   document.getElementById('medicineList').innerHTML = (data.medicationReminders || []).length ? data.medicationReminders.map((item) => `
     <div class="result-item">
       <strong>${item.medicine}</strong><br />
       ${item.time} • ${item.note}
     </div>
-  `).join('') : '<div class="result-item">No medication reminders yet. Add one above.</div>';
+  `).join('') : '<div class="result-item is-empty">No medication reminders yet. Add one above.</div>';
 
   document.getElementById('visitReminderList').innerHTML = (data.visitReminders || []).length ? data.visitReminders.map((item) => `
     <div class="result-item">
       <strong>${item.title}</strong><br />
       Due: ${item.due} • ${item.type}
     </div>
-  `).join('') : '<div class="result-item">No doctor visit reminders yet. Add one above.</div>';
+  `).join('') : '<div class="result-item is-empty">No doctor visit reminders yet. Add one above.</div>';
 
   document.getElementById('metricsList').innerHTML = (data.metrics || []).length ? data.metrics.map((item) => `
     <div class="metric-item">
       <strong>${item.metric}</strong> — ${item.value} (${item.time}, ${item.date})
     </div>
-  `).join('') : '<div class="result-item">No readings yet. Log your first reading above.</div>';
+  `).join('') : '<div class="result-item is-empty">No readings yet. Log your first reading above.</div>';
 
   const familyAccountsMarkup = (state.familyAccounts || []).map((account) => `
     <div class="profile-item">
@@ -466,7 +479,7 @@ function renderDashboard(data) {
       Username: ${account.username}<br />
       ${account.isSelf ? 'Primary signed-in account' : 'Linked family account'}
       <div class="result-actions">
-        <button type="button" class="inline-button secondary" data-switch-account="${account.username}">View this account</button>
+        <button type="button" class="inline-button secondary" data-switch-account="${account.username}"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-arrow-right-circle"></use></svg>View this account</button>
       </div>
     </div>
   `).join('');
@@ -478,7 +491,7 @@ function renderDashboard(data) {
       Allergies: ${profile.allergies.length ? profile.allergies.join(', ') : 'None'}<br />
       Current medicines: ${profile.medicines.join(', ')}
     </div>
-  `).join('') : '<div class="result-item">No local family profiles added yet.</div>';
+  `).join('') : '<div class="result-item is-empty">No local family profiles added yet.</div>';
 
   document.getElementById('familyList').innerHTML = `${familyAccountsMarkup}${familyProfilesMarkup}`;
 
@@ -498,11 +511,11 @@ function renderDashboard(data) {
 
   document.getElementById('timelineList').innerHTML = (data.records || []).length ? data.records.map((record) => `
     <div class="timeline-step">
-      <strong>${record.visitDate}</strong> — ${record.diagnosis} at ${record.hospital}<br />
-      Doctor: ${record.doctor} • ${record.type}
-      ${state.viewingSelf ? `<div class="result-actions"><button type="button" class="inline-button secondary" data-edit-record-id="${record.id}">Edit report</button></div>` : ''}
+      <strong>${record.visitDate}</strong> — ${record.diagnosis || 'Diagnosis pending'} at ${record.hospital}<br />
+      Doctor: ${record.doctor} • ${record.type || 'Report'}
+      ${state.viewingSelf ? `<div class="result-actions"><button type="button" class="inline-button secondary" data-edit-record-id="${record.id}"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-edit"></use></svg>Edit report</button></div>` : ''}
     </div>
-  `).join('') : '<div class="result-item">No timeline records yet. Save a report to start timeline tracking.</div>';
+  `).join('') : '<div class="result-item is-empty">No timeline records yet. Save a report to start timeline tracking.</div>';
 
   renderResults(data.records);
 }
@@ -511,13 +524,13 @@ function renderResults(results) {
   state.searchResults = results;
   document.getElementById('resultsContainer').innerHTML = (results || []).length ? results.map((record) => `
     <div class="result-item">
-      <strong>${record.type}</strong> • ${record.disease}<br />
+      <strong>${record.type || 'Report'}</strong> • ${record.disease || 'General'}<br />
       ${record.doctor} at ${record.hospital}<br />
       Diagnosis: ${record.diagnosis}<br />
       Medicines: ${record.medicines.join(', ')}
-      ${state.viewingSelf ? `<div class="result-actions"><button type="button" class="inline-button secondary" data-edit-record-id="${record.id}">Edit report</button></div>` : ''}
+      ${state.viewingSelf ? `<div class="result-actions"><button type="button" class="inline-button secondary" data-edit-record-id="${record.id}"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-edit"></use></svg>Edit report</button></div>` : ''}
     </div>
-  `).join('') : '<div class="result-item">No matching reports found.</div>';
+  `).join('') : '<div class="result-item is-empty">No matching reports found.</div>';
 }
 
 function getRecordForm() {
@@ -543,7 +556,8 @@ function updateRecordFormMode() {
 
   banner.hidden = !isEditing;
   cancelButton.hidden = !isEditing;
-  submitButton.textContent = isEditing ? 'Update report' : 'Save scanned record';
+  const submitIcon = isEditing ? 'icon-check-circle' : 'icon-upload';
+  submitButton.innerHTML = `<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#${submitIcon}"></use></svg>${isEditing ? 'Update report' : 'Save scanned record'}`;
   if (idField) {
     idField.value = isEditing ? String(state.editingRecordId) : '';
   }
@@ -643,7 +657,7 @@ function renderExtractionReview(extracted) {
   }
 
   if (!extracted) {
-    statusEl.textContent = 'Waiting for scan';
+    statusEl.innerHTML = '<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-info-circle"></use></svg>Waiting for scan';
     summaryEl.textContent = 'Run AI extraction to review cleaned medicines, diagnoses, and tests.';
     diagnosisEl.textContent = 'Not available yet';
     diseaseEl.textContent = 'Not available yet';
@@ -655,7 +669,8 @@ function renderExtractionReview(extracted) {
   const summary = extracted.summary || 'Extraction completed.';
   const hasStrongOutput = Boolean(extracted.diagnosis || extracted.disease || (extracted.medicines || []).length || (extracted.tests || []).length);
 
-  statusEl.textContent = hasStrongOutput ? 'Normalized' : 'Needs review';
+  const statusIcon = hasStrongOutput ? 'icon-check-circle' : 'icon-alert-triangle';
+  statusEl.innerHTML = `<svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#${statusIcon}"></use></svg>${hasStrongOutput ? 'Normalized' : 'Needs review'}`;
   summaryEl.textContent = summary;
   diagnosisEl.textContent = extracted.diagnosis || 'No normalized diagnosis detected';
   diseaseEl.textContent = extracted.disease || 'No normalized disease detected';
@@ -1131,7 +1146,7 @@ async function runOcrOnUploadedPhoto(file) {
     }
 
     try {
-      document.getElementById('chatAnswer').textContent = 'Reading report image...';
+      setChatAnswer('Reading report image...');
       setDocumentTextValue('Running OCR...');
 
       const preprocessedImage = await preprocessImageForOcr(file, dataUrl);
@@ -1150,19 +1165,19 @@ async function runOcrOnUploadedPhoto(file) {
           medicines: extractMedicineCandidatesFromText(text.split(/\n+/)),
           tests: []
         });
-        document.getElementById('chatAnswer').textContent = 'Photo OCR completed. You can now run AI extraction.';
+        setChatAnswer('Photo OCR completed. You can now run AI extraction.');
       } else {
         state.latestScanText = '';
         setDocumentTextValue(buildOcrDiagnosticsText(state.latestOcrDiagnostics));
         renderExtractionReview(null);
-        document.getElementById('chatAnswer').textContent = 'OCR did not detect readable text. Diagnostics were written into the OCR text box.';
+        setChatAnswer('OCR did not detect readable text. Diagnostics were written into the OCR text box.');
       }
     } catch (error) {
       console.error(error);
       state.latestScanText = '';
       setDocumentTextValue(`OCR failed: ${error?.message || 'Unknown error'}`);
       renderExtractionReview(null);
-      document.getElementById('chatAnswer').textContent = 'OCR could not read the image. Please paste the report text manually or try another photo.';
+      setChatAnswer('OCR could not read the image. Please paste the report text manually or try another photo.');
     }
   };
 
@@ -1182,7 +1197,7 @@ document.getElementById('chatButton').addEventListener('click', async () => {
   const question = document.getElementById('chatInput').value.trim();
   const query = getActiveAccountQuery();
   const data = await fetchJson(`/api/chat?q=${encodeURIComponent(question)}${query ? `&${query}` : ''}`);
-  document.getElementById('chatAnswer').textContent = data.answer || 'Login required.';
+  setChatAnswer(data.answer || 'Login required.');
   if (data.answer) {
     setStatus('Assistant response updated.', 'info');
   }
@@ -1204,7 +1219,7 @@ document.getElementById('recordForm').addEventListener('submit', async (event) =
   if (data.success) {
     await loadDashboard();
     resetRecordEditor(true);
-    document.getElementById('chatAnswer').textContent = isEditing ? 'Saved changes to the report.' : 'Saved new scanned record.';
+    setChatAnswer(isEditing ? 'Saved changes to the report.' : 'Saved new scanned record.');
     setStatus(isEditing ? 'Report updated successfully.' : 'Report saved successfully.', 'success');
   }
 });
@@ -1231,7 +1246,7 @@ document.addEventListener('click', (event) => {
   }
 
   if (!state.viewingSelf) {
-    document.getElementById('chatAnswer').textContent = 'Switch back to your own account to edit records.';
+    setChatAnswer('Switch back to your own account to edit records.');
     setStatus('Read-only mode: switch to your account to edit.', 'warning');
     return;
   }
@@ -1252,7 +1267,7 @@ document.getElementById('scanButton').addEventListener('click', async () => {
       medicines: [],
       tests: []
     });
-    document.getElementById('chatAnswer').textContent = 'AI extraction was skipped because OCR text is empty or diagnostic-only.';
+    setChatAnswer('AI extraction was skipped because OCR text is empty or diagnostic-only.');
     setStatus('No usable OCR text found. Paste text or retake photo.', 'warning');
     return;
   }
@@ -1268,7 +1283,7 @@ document.getElementById('scanButton').addEventListener('click', async () => {
     state.latestScanText = text;
     applyExtractedScanValues(data.extracted);
     await loadDashboard();
-    document.getElementById('chatAnswer').textContent = `AI extraction completed: ${data.extracted.diagnosis}`;
+    setChatAnswer(`AI extraction completed: ${data.extracted.diagnosis}`);
     setStatus('AI extraction completed.', 'success');
   }
 });
@@ -1365,12 +1380,12 @@ document.getElementById('familyAccountLinkForm').addEventListener('submit', asyn
   });
 
   if (!data.success) {
-    document.getElementById('chatAnswer').textContent = `${data.message || 'Unable to link this family account.'} Use username, @username, or exact display name.`;
+    setChatAnswer(`${data.message || 'Unable to link this family account.'} Use username, @username, or exact display name.`);
     setStatus('Could not link family account. Check username and try again.', 'error');
     return;
   }
 
-  document.getElementById('chatAnswer').textContent = `Linked account ${data.account.displayName}. Click View this account in Family Accounts.`;
+  setChatAnswer(`Linked account ${data.account.displayName}. Click View this account in Family Accounts.`);
   setStatus(`Linked family account: ${data.account.displayName}.`, 'success');
   form.reset();
   await loadDashboard(state.currentUser?.username || '');

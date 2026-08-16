@@ -21,16 +21,25 @@
     <section class="auth-screen">
       <div class="auth-card">
         <div class="auth-copy">
-          <div class="brand auth-brand">CareCompass AI</div>
+          <div class="brand auth-brand">
+            <span class="auth-brand-mark"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-shield"></use></svg></span>
+            CareCompass AI
+          </div>
           <h1>Your reports, per user</h1>
           <p>Sign in to keep reports, reminders, and health tracking isolated for each family member or account.</p>
+          <ul class="auth-features">
+            <li><span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-camera"></use></svg></span>Scan and organize reports with AI</li>
+            <li><span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-activity"></use></svg></span>Track vitals and spot trends over time</li>
+            <li><span class="icon-badge"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-users"></use></svg></span>Manage the whole family from one place</li>
+          </ul>
         </div>
         <form id="authForm" class="auth-form">
           <h2 id="authTitle">Login</h2>
+          <p class="auth-sub">Welcome back — enter your details to continue.</p>
           <label id="displayNameField" hidden>Display name<input name="displayName" placeholder="Jane Rao" /></label>
           <label>Username<input name="username" placeholder="jane" required /></label>
           <label>Password<input name="password" type="password" placeholder="Minimum 4 characters" required /></label>
-          <button type="submit" id="authSubmitButton">Login</button>
+          <button type="submit" id="authSubmitButton"><svg class="icon" aria-hidden="true"><use href="/icons/sprite.svg#icon-arrow-right-circle"></use></svg>Login</button>
           <button type="button" id="authToggleButton" class="secondary">Create account instead</button>
           <div id="authMessage" class="auth-message">Use a separate login for each person's reports and reminders.</div>
         </form>
